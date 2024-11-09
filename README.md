@@ -113,12 +113,249 @@ Grand Total	211
 
 # Using Structured Query Language
 
+***Total Sales for Each Product Category***
+
+Select Product, SUM (Total_Sales) AS [Total Sales]
+FROM dbo.Sales_Data
+GROUP BY Product
+
+Product Total Sales
+Shoes	613380
+Jacket	208230
+Hat	    316195
+Socks	180785
+Shirt	485600
+Gloves	296900
+
+select * from dbo.Sales_Data
+
+
+***Number of Sales Transaction In Each Region***
+
+SELECT Region, COUNT(*) AS [Sales Transaction]
+FROM dbo.Sales_Data
+GROUP BY Region
+
+Region  Sales Transaction
+North	2481
+East	2483
+South	2480
+West	2477
+
+select * from dbo.Sales_Data
+
+
+***Highest-Selling Product By Total Sales Value***
+
+Select TOP 1 Product, SUM (Total_Sales) AS [Total Sales]
+FROM dbo.Sales_Data
+GROUP BY Product
+ORDER BY [TOTAL SALES] DESC
+
+Product Total Sales
+Shoes	613380
+
+select * from dbo.Sales_Data
+
+
+***Total Revenue Per Product***
+
+Select Product, SUM(Quantity*UnitPrice) AS [Total Revenue]
+FROM dbo.Sales_Data
+GROUP BY Product
+ORDER BY [TOTAL REVENUE] DESC
+
+Product Total Revenue
+Shoes	613380
+Shirt	485600
+Hat	    316195
+Gloves	296900
+Jacket	208230
+Socks	180785
+
+select * from dbo.Sales_Data
+
+
+***Calculate Monthly Sales Total For The Current Year***
+
+SELECT MONTH(OrderDate) AS MONTH,
+SUM(Quantity*UnitPrice) AS [Total Sales]
+FROM dbo.Sales_Data
+WHERE YEAR(OrderDate) = YEAR(2024)
+GROUP BY MONTH(OrderDate)
+ORDER BY MONTH
+
+select * from dbo.Sales_Data
+
+
+***Top 5 Customers By Total Purchase Amount***
+
+SELECT TOP 5 Customer_Id,
+SUM (Total_Sales) AS [Total Purchase Amount]
+FROM dbo.Sales_Data
+GROUP BY Customer_Id
+ORDER BY [TOTAL PURCHASE AMOUNT] DESC
+
+Customer_Id   Total Purchase Amount
+Cus1431	      4235
+Cus1495	      4235
+Cus1005	      4235
+Cus1115	      4235
+Cus1302	      4235
+
+select * from dbo.Sales_Data
+
+
+***Percentage of Total Sales Contributed By Each Region***
+
+SELECT Region,
+SUM (Total_Sales) AS [Total Sales],
+(SUM (Total_Sales) * 100.0)/ (SELECT SUM(Total_Sales) 
+FROM dbo.Sales_Data) AS [Sales Percentage]
+FROM dbo.Sales_Data
+GROUP BY Region
+ORDER BY [Sales Percentage] DESC
+
+Region  Total Sales  Sales Percentage
+South	927820	     44.158984146324
+East	485925	     23.127281553860
+North	387000	     18.419011084722
+West	300345	     14.294723215093
+
+select * from dbo.Sales_Data
+
+***Identifying Products With No Sales In The Last Quarter***
+
+SELECT Product,
+SUM(TOTAL_SALES) AS [Total Sales]
+FROM dbo.Sales_Data
+WHERE Product NOT IN ('quarter')
+  AND OrderDate >= DATEADD(quarter,-3,GETDATE()) -- 3 quarters ago
+  AND OrderDate >= DATEADD(quarter,-1,GETDATE()) -- Last quarter
+GROUP BY Product
+ORDER BY [Total Sales] DESC;
+
+
+select * from dbo.Sales_Data
+
+
+********PROJECT 2********
+
+***Total Number of Customers From Each Region***
+
+SELECT Region,
+COUNT(distinct CustomerID) AS [Total Customers]
+FROM dbo.Customer_Data2
+GROUP BY Region
+
+Region  Total Customers
+East	5
+North	5
+South	5
+West	5
+
+select * from dbo.Customer_Data2
 
 
 
+***Most Popular Subscription Type By The Number of Customers***
+
+SELECT TOP 1 SubscriptionType,
+COUNT(distinct CustomerID) AS [Total Customers]
+FROM dbo.Customer_Data2
+GROUP BY SubscriptionType
+ORDER BY [Total Customers] DESC;
+
+
+SubscriptionType  Total Customers
+Basic	           10
+
+
+select * from dbo.Customer_Data2
+
+
+***Customers Who Cancelled Their Subscription Within 6Months***
+
+SELECT CustomerID
+FROM dbo.Customer_Data2
+Where datediff(month,subscriptionstart,subscriptionend)<=6
+
+
+CustomerID
+None
+
+
+select * from dbo.Customer_Data2
+
+
+***Average Subscription Duration For All Customers***
+
+SELECT AVG(datediff(day,subscriptionstart,subscriptionend))
+AS [Avg Subscription Duration]
+FROM dbo.Customer_Data2
+
+Avg Subscription Duration
+365
+
+select * from dbo.Customer_Data2
 
 
 
+***Customers With Subscription Longer Than 12Months***
+
+SELECT CustomerID
+From dbo.Customer_Data2
+Where DATEDIFF(month,subscriptionstart,subscriptionend)>12
+
+CustomerID
+None
+
+select * from dbo.Customer_Data2
+
+
+
+***Total Revenue By Subscription Type***
+
+Select SubscriptionType,
+SUM (Revenue) AS [Total Revenue]
+From dbo.Customer_Data2
+Group By SubscriptionType
+
+
+SubscriptionType	Total Revenue
+Basic	            33776735
+Premium	            16899064
+Standard	        16864376
+
+
+select * from dbo.Customer_Data2
+
+
+***Top 3 Regions By Subcription Cancelation***
+
+Select TOP 3 Region,
+Count(*) AS [Subscription Canceled]
+From dbo.Customer_Data2
+Where Canceled = 'TRUE'
+Group By Region
+Order By [Subscription Canceled] DESC;
+
+
+Region	Subscription Canceled
+North	5067
+South	5064
+West	5044
+
+select * from dbo.Customer_Data2
+
+
+***Total Number of Active and Canceled Subscriptions***
+
+Select Canceled, COUNT(*) AS [Total Subscriptions]
+From dbo.Customer_Data2
+Group By Canceled
+
+select * from dbo.Customer_Data2
 
 
 
