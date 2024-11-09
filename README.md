@@ -124,7 +124,7 @@ Grand Total	211
 
 # Further Analysis Using PowerBI
 
-
+![Customer Data--Capstone](https://github.com/user-attachments/assets/c37845d1-91b9-47c4-b8ac-f1531b3cd8e0)
 
 
 
